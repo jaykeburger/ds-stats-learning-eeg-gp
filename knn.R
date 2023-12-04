@@ -1,4 +1,4 @@
-
+install.packages("caret")
 library(caret)
 
 data <- read.csv("C:/Users/Joseph/Downloads/school/Fall/MATH 4323/Project/train.csv")
