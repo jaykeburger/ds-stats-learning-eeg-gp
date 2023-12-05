@@ -140,6 +140,7 @@ svm.tune <- tune(METHOD = svm,
                                degree = c(1, 2, 3, 5, 10)))
 svm.tune
 summary(svm.tune)
+summary(svm.tune$best.model)
 
 # Error rates
 train.yPred <- predict(svm.tune$best.model, train_set)  # training error rate
@@ -184,6 +185,7 @@ svm.tune.scale <- tune(METHOD = svm,
                                      degree = c(1, 2, 3, 5, 10)))
 svm.tune.scale
 summary(svm.tune.scale)
+summary(svm.tune.scale$best.model)
 
 # Error rates (Scaled)
 train.yPred.scaled <- predict(svm.tune.scale$best.model, train_set.scaled)  # training error rate
