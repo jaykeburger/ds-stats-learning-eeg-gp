@@ -25,10 +25,23 @@ fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl =
               tuneGrid= expand.grid(k=seq(3,85, by =2)), preProcess = c("center", "scale")
               , metric = "Accuracy")
 
+summary(fit.knn)
+
+#hyper parameter tuning for KNN model using caret library
+ctrl <- trainControl(method="cv", number=10)
+fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl = ctrl, 
+              tuneGrid= expand.grid(k=seq(3,85, by =2)), preProcess = c("center", "scale")
+              , metric = "Accuracy")
+
+summary(fit.knn)
 #best result was when k=3
 
+#unscaled hyper parameter tuning for KNN model using caret library
+ctrl <- trainControl(method="cv", number=10)
+fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl = ctrl, 
+              tuneGrid= expand.grid(k=seq(3,85, by =2)) , metric = "Accuracy")
 
-knn.pred = knn(X.train, X.test, y.train, k=3)
+summary(fit.knn)
 
 # Run KNN on scaled data
 scaled_X_train <- scale(X.train)
