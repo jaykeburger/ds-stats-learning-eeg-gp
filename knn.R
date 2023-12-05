@@ -36,6 +36,22 @@ fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl =
 summary(fit.knn)
 #best result was when k=3
 
+# Run KNN on scaled data
+scaled_X_train <- scale(X.train)
+scaled_X_test <- scale(X.test, center = attr(scaled_X_train, "scaled:center"), 
+                       scale = attr(scaled_X_train, "scaled:scale"))
+
+knn.pred <- knn(scaled_X_train, scaled_X_test, y.train, k = 3)
+
+#confusion matrix
+print(table(knn.pred, y.test))
+#error rate
+err <- mean(knn.pred != y.test)
+print(err)
+
+#correct prediction rate
+print(1-err)
+
 #unscaled hyper parameter tuning for KNN model using caret library
 ctrl <- trainControl(method="cv", number=10)
 fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl = ctrl, 
@@ -43,12 +59,7 @@ fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl =
 
 summary(fit.knn)
 
-# Run KNN on scaled data
-scaled_X_train <- scale(X.train)
-scaled_X_test <- scale(X.test, center = attr(scaled_X_train, "scaled:center"), 
-                       scale = attr(scaled_X_train, "scaled:scale"))
-
-knn.pred <- knn(scaled_X_train, scaled_X_test, y.train, k = 3)
+knn.pred = knn(X.train, X.test, y.train, k=3)
 
 #confusion matrix
 print(table(knn.pred, y.test))
