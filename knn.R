@@ -19,13 +19,6 @@ y.train <- training[,15]
 X.test <- testing[,-15]
 y.test <- testing[,15]
 
-#hyper parameter tuning for KNN model using caret library
-ctrl <- trainControl(method="cv", number=10)
-fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl = ctrl, 
-              tuneGrid= expand.grid(k=seq(3,85, by =2)), preProcess = c("center", "scale")
-              , metric = "Accuracy")
-
-summary(fit.knn)
 
 #hyper parameter tuning for KNN model using caret library
 ctrl <- trainControl(method="cv", number=10)
