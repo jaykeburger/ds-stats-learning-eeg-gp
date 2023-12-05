@@ -141,6 +141,7 @@ svm.tune <- tune(METHOD = svm,
 svm.tune
 summary(svm.tune)
 summary(svm.tune$best.model)
+plot(svm.tune$performances$error, type = "b", ylab = "Error Rate", main = "Error Rates of Unscaled Tune Models")
 
 # Error rates
 train.yPred <- predict(svm.tune$best.model, train_set)  # training error rate
@@ -186,6 +187,7 @@ svm.tune.scale <- tune(METHOD = svm,
 svm.tune.scale
 summary(svm.tune.scale)
 summary(svm.tune.scale$best.model)
+plot(svm.tune.scale$performances$error, type = "b", ylab = "Error Rate", main = "Error Rates of Scaled Tune Models")
 
 # Error rates (Scaled)
 train.yPred.scaled <- predict(svm.tune.scale$best.model, train_set.scaled)  # training error rate
