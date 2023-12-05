@@ -45,6 +45,27 @@ print(err)
 #correct prediction rate
 print(1-err)
 
+#plotting 
+
+error_rates <- numeric()
+
+#Loop through k values from 1 to 12 of scaled data
+  scaled_X_train <- scale(X.train)
+  scaled_X_test <- scale(X.test, center = attr(scaled_X_train, "scaled:center"), 
+                         scale = attr(scaled_X_train, "scaled:scale"))
+for (k in 1:12) {  
+  knn.pred <- knn(scaled_X_train, scaled_X_test, y.train, k = k)
+  
+  # Calculate error rate for each k value
+  error <- mean(knn.pred != y.test)
+  error_rates <- c(error_rates, error)
+}
+
+# Plotting error rates for different k values
+plot(1:12, error_rates, type = 'b', xlab = 'k values', ylab = 'Error Rate', 
+     main = 'Scaled Error Rates for Different k values in KNN')
+
+
 #unscaled hyper parameter tuning for KNN model using caret library
 ctrl <- trainControl(method="cv", number=10)
 fit.knn <- train(eyeDetection ~ . , data = training, method = "knn", trControl = ctrl, 
@@ -79,28 +100,6 @@ for (k in 1:12) {
 plot(1:12, error_rates, type = 'b', xlab = 'k values', ylab = 'Error Rate', 
      main = 'Unscaled Error Rates for Different k values in KNN')
 
-#need to reset the error_rates for 2nd plot to work
-error_rates <- numeric()
-
-#Loop through k values from 1 to 12 of scaled data
-for (k in 1:12) {
-  scaled_X_train <- scale(X.train)
-  scaled_X_test <- scale(X.test, center = attr(scaled_X_train, "scaled:center"), 
-                         scale = attr(scaled_X_train, "scaled:scale"))
-  
-  knn.pred <- knn(scaled_X_train, scaled_X_test, y.train, k = k)
-  
-  # Calculate error rate for each k value
-  error <- mean(knn.pred != y.test)
-  error_rates <- c(error_rates, error)
-}
-
-# Plotting error rates for different k values
-plot(1:12, error_rates, type = 'b', xlab = 'k values', ylab = 'Error Rate', 
-     main = 'Scaled Error Rates for Different k values in KNN')
-
-
-# SVM models & PCA analysis
 
 X <- data[,-15]
 y <- data[,15]
@@ -110,8 +109,6 @@ pca_model <- prcomp(X, scale=TRUE)
 summary(pca_model)
 
 #first 5 PCAs account for 96% of the variance, we will use these to train a model
-
-#creating SVM models, using PCA
 
 #new PCA dataset - hyperparameter tuning
 
