@@ -1,4 +1,9 @@
+library(ggplot2)
+library(ggfortify)
+library(GGally)
+ggpairs(train[,-15])
 
+cor(train$AF3,train$F7)
 
 train$eyeDetection <- as.factor(train$eyeDetection)
 set.seed(4323)
@@ -6,7 +11,7 @@ library(e1071)
 n = nrow(train)
 t.train = sample(1:n,.8*n)
 t.train
-
+tc <- tune.control(cross = 10)
 
 
 nums = 1:n
@@ -29,6 +34,7 @@ summary(eye.PCA.out.scale)
 
 
 
+
 ##no scale first##
 #subset#
 #checking code
@@ -38,7 +44,8 @@ tune.eye.outR.notS =tune(svm,
                  eyeDetection~., data=eye.train.sub,
                  kernel="radial",
                  ranges=list(cost=c(0.1,1,10,100,1000),
-                             gamma=c(0.5,1,2,3,4)))
+                             gamma=c(0.5,1,2,3,4)),
+                 tunecontrol = tc)
 tune.eye.outR.notS
 summary(tune.eye.outR.notS)
 
@@ -55,7 +62,8 @@ set.seed(4323)
 tune.eye.outR.S =tune(svm,train.scale, train.y = train.scale.y, 
                       kernel="radial",
                       ranges=list(cost=c(0.1,1,10,100),
-                                  gamma=c(0.5,1,2,3)))
+                                  gamma=c(0.5,1,2,3)),
+                      tunecontrol = tc)
 tune.eye.outR.S
 
 
@@ -87,7 +95,22 @@ table(true = eye.test.sub.y, pred = predict.sub.scale)
 
 #both confusion matrixes have the same result
 
+#error rate 0.0769
+#1 is open, 0 is closed
+svmfit1 = svm(eyeDetection~., data = eye.train.sub,
+              kernel = "Radial",
+              cost = 10,
+              gamma = .5,
+              scale = FALSE)
+?plot
 
+plot(tune.eye.outR.S$best.model, AF3~7)
+plot(tune.eye.outR.S$best.model,eye.sub, O1~AF4)
+plot(tune.eye.outR.S$best.model,eye.sub, T7~FC6)
+plot(tune.eye.outR.S$best.model,eye.sub, P7~F3)
+
+
+plot(data_pca[train.sample,c(1,2)], )
 
 
 
@@ -104,6 +127,10 @@ tune.eye.outR.notS =tune(svm,
                                      gamma=c(0.5,1,2,3)))
 tune.eye.outR.notS
 summary(tune.eye.outR.notS)
+tune.eye.outR.notS$best.model$SV
+tune.eye.outR.notS$best.model$nSV
+tune.eye.outR.notS$best.model$tot.nSV
+
 
 
 eye.rad.svm.notS = svm(eyeDetection~., data=train[t.train,],kernel="radial",cost=10,gamma = 1)
