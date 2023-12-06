@@ -121,14 +121,6 @@ PCA_X <- data.frame(PCA_X, eyeDetection = data$eyeDetection)
 training.PCA <- PCA_X[train,]
 testing.PCA <- PCA_X[-train,]
 
-PCA.SVm.tune <- tune(svm, eyeDetection ~ ., data=training.PCA,
-                     ranges = list(kernel = c("linear", "radial", "polynomial", "sigmoid"),
-                     cost = 10^(-1:2))
-                    )
-
-summary(PCA.SVm.tune)
-
-
 
 ctrl <- trainControl(method="cv", number=10)
 fit.knn <- train(eyeDetection ~ . , data = training.PCA, method = "knn", trControl = ctrl, 
